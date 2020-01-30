@@ -4,6 +4,8 @@ import com.RJ45.demo.entities.PersonaEntity;
 import com.RJ45.demo.repositories.PersonaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -27,5 +29,11 @@ public class PersonaController{
         List<PersonaEntity> personasList = new ArrayList<PersonaEntity>();
         result.forEach(personasList ::add);
         return personasList;
+    }
+
+    @PostMapping("/personas")
+    public void agregarPersona(@RequestBody PersonaEntity nueva)
+    {
+        personaRepository.save(nueva);
     }
 }

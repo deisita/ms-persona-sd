@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name="persona", schema = "deisy")
+@Table(name="persona", schema = "miguel")
 public class PersonaEntity {
     @Id
     private Integer id;

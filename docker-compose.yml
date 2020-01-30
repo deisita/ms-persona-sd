@@ -1,0 +1,18 @@
+version: '3'
+services:
+  bd:
+    container_name: postgres-microservicio
+    image: postgres
+    ports:
+      - 5444:5432
+    volumes:
+      - /home/deisy/volumen/postgres:/var/lib/postgresql/data
+  microservice:
+    container_name: ms-test
+    image: deisylh/ms-persona-sd
+    ports:
+      - 8086:8080
+  restart:
+  	always
+  depends_on:
+      - bd

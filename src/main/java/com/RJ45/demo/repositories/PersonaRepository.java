@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PersonaRepository extends CrudRepository<PersonaEntity, Integer> {
-    List<PersonaEntity> findById(int id);
+
 }

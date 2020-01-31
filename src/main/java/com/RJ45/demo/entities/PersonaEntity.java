@@ -16,6 +16,7 @@ import java.util.Date;
 @Entity
 @Table(name="persona", schema = "deisy")
 public class PersonaEntity {
+
     @Id
     private Integer id;
 

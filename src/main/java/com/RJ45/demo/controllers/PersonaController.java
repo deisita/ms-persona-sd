@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class PersonaController{
@@ -14,14 +15,15 @@ public class PersonaController{
     @Autowired
     private PersonaRepository personaRepository;
 
+
     @GetMapping("/")
-    public String getPersonas()
+    public String getInicio()
     {
         return "Hola!";
     }
 
     @GetMapping("/personas")
-    public List<PersonaEntity> getEmployees(){
+    public List<PersonaEntity> getPersonas(){
         Iterable<PersonaEntity> result = personaRepository.findAll();
         List<PersonaEntity> personasList = new ArrayList<PersonaEntity>();
         result.forEach(personasList ::add);
@@ -35,11 +37,23 @@ public class PersonaController{
         //return id;
     }
 
-
-
-    @PostMapping("/personas")
+    @PostMapping("/persona")
     public void agregarPersona(@RequestBody PersonaEntity nueva)
     {
         personaRepository.save(nueva);
     }
+
+
+    @GetMapping("/search")
+    public String search(@RequestParam long id){
+        String customer = "";
+        customer = personaRepository.findById((int) id).toString();
+        return customer;
+    }
+
+    @GetMapping("/searchPersonaId")
+    public PersonaEntity getPersonasId(@RequestParam int id){
+      return personaRepository.findById(id).get();
+    }
+
 }

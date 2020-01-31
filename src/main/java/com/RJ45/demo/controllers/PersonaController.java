@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 public class PersonaController{
 
@@ -20,7 +21,10 @@ public class PersonaController{
     public String getInicio()
     {
         return "Hola!";
+
     }
+
+
 
     @GetMapping("/personas")
     public List<PersonaEntity> getPersonas(){
@@ -37,12 +41,11 @@ public class PersonaController{
         //return id;
     }
 
-    @PostMapping("/persona")
+    @PostMapping("/guardaPersona")
     public void agregarPersona(@RequestBody PersonaEntity nueva)
     {
         personaRepository.save(nueva);
     }
-
 
     @GetMapping("/search")
     public String search(@RequestParam long id){
@@ -55,5 +58,23 @@ public class PersonaController{
     public PersonaEntity getPersonasId(@RequestParam int id){
       return personaRepository.findById(id).get();
     }
+
+    @PostMapping("/deletePersona")
+    public void deletePersonas(@RequestBody PersonaEntity id)
+    {
+        personaRepository.delete(id);
+    }
+
+
+     /**@GetMapping("/p")
+    public List<PersonaEntity> getPersonasIdd(){
+      /** Iterable<PersonaEntity> result = personaRepository.findIsLikeNombreOrderByNombre(1);
+
+        List<PersonaEntity> personasList = new ArrayList<PersonaEntity>();
+        result.forEach(personasList ::add);
+        return personasList;
+
+         return personaRepository.findPerson(1);
+    }*/
 
 }

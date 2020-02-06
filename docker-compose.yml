@@ -5,8 +5,15 @@ services:
     image: deisylh/ms-persona-sd
     ports:
       - 8086:8080
+    depends_on:
+      - bd
     environment:
       - POSTGRES_URL=jdbc:postgresql://46.183.113.254:5432/postgres
-      - POSTGRES_PORT=5432
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=
+  bd:
+    container_name: bd-postgres
+    image: postgres
+    ports:
+      - 5432:5432
+

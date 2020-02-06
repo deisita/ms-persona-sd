@@ -75,4 +75,23 @@ public class PersonaController{
          return personaRepository.buscaPorNombre(id);
     }
 
+    @GetMapping("/countPersonas")
+    public String ContarPersonas()
+    {
+        return "Total: " + personaRepository.count();
+    }
+
+    @GetMapping("/ePersonas")
+    public String ExistePersona(@RequestParam int id)
+    {
+        if (personaRepository.existsById(id)==true)
+        {
+            return "La persona si existe.";
+        }
+        else
+        {
+            return "La persona no existe.";
+        }
+    }
+
 }

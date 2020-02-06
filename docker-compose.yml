@@ -1,19 +1,26 @@
 version: '3'
 services:
   microservice:
-    container_name: ms-persona-sd
+    container_name: ms-persona-sd-local
     image: deisylh/ms-persona-sd
     ports:
-      - 8086:8080
+      - 8087:8080
     depends_on:
       - bd
     environment:
-      - POSTGRES_URL=jdbc:postgresql://46.183.113.254:5432/postgres
+      - POSTGRES_URL=jdbc:postgresql://192.168.0.6:5432/postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=
+      - POSTGRES_DB=postgres
   bd:
-    container_name: bd-postgres
+    container_name: bd-postgres-local
     image: postgres
     ports:
       - 5432:5432
+    environment:
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./script:/docker-entrypoint-initdb.d
+      - ./volumen/postgres:/var/lib/postgresql/data    
+
 

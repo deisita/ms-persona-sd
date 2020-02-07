@@ -9,9 +9,11 @@ import java.util.List;
 
 @Repository
 public interface PersonaRepository extends CrudRepository<PersonaEntity, Integer> {
-    @Query(value = "select * from deisy.persona p where p.id = :id", nativeQuery = true)
-    List<PersonaEntity>buscaPorNombre(@Param("id") Integer id);
+    //Query(value = "select * from deisy.persona p where p.id = :id", nativeQuery = true)
+   // List<PersonaEntity>buscaPorNombre(@Param("nombre") String primer_nombre);
 
+
+    List<PersonaEntity>findByPrimerNombreAndPrimerApellido(String primerNombre,String primerApellido);
     /**
      * Esta funcion hace exactamente lo mismo que la funcion buscaPorNombre pero utilizando DSL (Domain Specificic Lenguage) de Spring
      * @param nombre Nombre de usuario a buscar (sin wildcards, ya lo pone JPL)

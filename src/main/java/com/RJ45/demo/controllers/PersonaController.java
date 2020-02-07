@@ -65,14 +65,15 @@ public class PersonaController{
 
 
     @GetMapping("/p")
-    public List<PersonaEntity> getPersonasIdd(@RequestParam int id){
+    public List<PersonaEntity> getPersonasIdd(@RequestParam String nombre){
      /** Iterable<PersonaEntity> result = personaRepository.buscaPorNombre(1);
 
         List<PersonaEntity> personasList = new ArrayList<PersonaEntity>();
         result.forEach(personasList ::add);
         return personasList;*/
 
-         return personaRepository.buscaPorNombre(id);
+         //return personaRepository.buscaPorNombre(nombre);
+        return  personaRepository.findByPrimerNombreAndPrimerApellido("maria", "liberato");
     }
 
     @GetMapping("/countPersonas")

@@ -38,5 +38,11 @@ public class PersonaEntity implements Serializable {
 
     @Column(name="genero")
     private String genero;
+
+    /**@Column(name="telefono")
+    private String telefono;
+
+    @Column(name="celular")
+    private String celular;*/
 }
 

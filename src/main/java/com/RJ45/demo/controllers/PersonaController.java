@@ -19,11 +19,25 @@ public class PersonaController{
     private PersonaRepository personaRepository;
 
     @GetMapping("/")
-    public List<PersonaEntity> getPersonas(){
-        Iterable<PersonaEntity> result = personaRepository.findAll();
-        List<PersonaEntity> personasList = new ArrayList<PersonaEntity>();
-        result.forEach(personasList ::add);
-        return personasList;
+    public ResponseEntity<?> getPersonas(){
+
+        List<PersonaEntity> obj=null;
+        Map<String, Object> response = new HashMap<>();
+        try{
+            Iterable<PersonaEntity> result = personaRepository.findAll();
+            obj = new ArrayList<PersonaEntity>();
+            result.forEach(obj ::add);
+            if (result==null){
+                response.put("mensaje","No se pudo encontrar a la persona.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(obj, HttpStatus.OK);
+        }
+        catch(DataAccessException e){
+            response.put("mensaje","Error al realizar la consulta en la base de datos.");
+            response.put("Error",e.getMessage()+"##"+e.getMostSpecificCause().getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{id}")
@@ -45,60 +59,157 @@ public class PersonaController{
         }
     }
 
-    @PostMapping("/guardaPersona")
+    @GetMapping("/{nombre},{apellido}")
+    public ResponseEntity<?> getPersonaNombreApellido(@PathVariable("nombre") String nombre,@PathVariable("apellido")  String apellido){
+
+        PersonaEntity obj=null;
+        Map<String, Object> response = new HashMap<>();
+        try{
+            obj = personaRepository.findByPrimerNombreAndPrimerApellido(nombre, apellido);
+            if (obj==null){
+                response.put("mensaje","No se encontró la persona.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(obj, HttpStatus.OK);
+        }
+        catch(DataAccessException e){
+            response.put("mensaje","Error al realizar la consulta en la base de datos.");
+            response.put("Error",e.getMessage()+"##"+e.getMostSpecificCause().getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addPersona(@RequestBody PersonaEntity nueva){
+
+        PersonaEntity obj=null;
+        Map<String, Object> response = new HashMap<>();
+        try{
+            obj = personaRepository.save(nueva);
+            if (obj==null){
+                response.put("mensaje","No se agregó la persona.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            response.put("mensaje","se agregó la persona.");
+            response.put("mensaje2",obj);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch(DataAccessException e){
+            response.put("mensaje","Error al realizar la consulta en la base de datos.");
+            response.put("Error",e.getMessage()+"##"+e.getMostSpecificCause().getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/deletePersona/{id}")
+    public ResponseEntity<?> deletePersonas(@PathVariable("id") int id)
+    {
+        Map<String, Object> response = new HashMap<>();
+        try{
+            personaRepository.deleteById(id);
+            /**Boolean result = personaRepository.existsById(id);
+            if (result==true){
+                response.put("mensaje","No se logró eliminar la persona.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }*/
+            response.put("mensaje","Se eliminnó la persona.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch(DataAccessException e){
+            response.put("mensaje","Error al realizar la consulta en la base de datos.");
+            response.put("Error",e.getMessage()+"##"+e.getMostSpecificCause().getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
+    @GetMapping("/cPersonas")
+    public ResponseEntity<?> cPersonas()
+    {
+        Map<String, Object> response = new HashMap<>();
+
+        try{
+            Long result = personaRepository.count();
+            if (result <= 0){
+                response.put("mensaje","No hay personas para contar.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            response.put("mensaje","Se encontraron " + result + " personas.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch(DataAccessException e){
+            response.put("mensaje","Error al realizar la consulta en la base de datos.");
+            response.put("Error",e.getMessage()+"##"+e.getMostSpecificCause().getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/exist/{id}")
+    public ResponseEntity<?>  ExistPersona(@PathVariable("id") int id)
+    {
+        Map<String, Object> response = new HashMap<>();
+        try{
+            Boolean result = personaRepository.existsById(id);
+            if (result==false){
+                response.put("mensaje","La persona no existe.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            response.put("mensaje","La persona existe.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch(DataAccessException e){
+            response.put("mensaje","Error al realizar la consulta en la base de datos.");
+            response.put("Error",e.getMessage()+"##"+e.getMostSpecificCause().getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+   /** @PostMapping("/agregarPersona")
     public void agregarPersona(@RequestBody PersonaEntity nueva)
     {
         personaRepository.save(nueva);
-    }
+    }*/
 
-    @GetMapping("/search")
-    public String search(@RequestParam long id){
-        String customer = "";
-        customer = personaRepository.findById((int) id).toString();
-        return customer;
-    }
-
-    @GetMapping("/searchPersonaId")
-    public PersonaEntity getPersonasId(@RequestParam int id){
-      return personaRepository.findById(id).get();
-    }
-
-    @PostMapping("/deletePersona")
-    public void deletePersonas(@RequestBody PersonaEntity id)
-    {
-        personaRepository.delete(id);
-    }
-
-
-    @GetMapping("/p")
+    /**@GetMapping("/p")
     public List<PersonaEntity> getPersonasIdd(@RequestParam String nombre){
-     /** Iterable<PersonaEntity> result = personaRepository.buscaPorNombre(1);
+    return  personaRepository.findByPrimerNombreAndPrimerApellido("maria", "liberato");
+    }*/
 
-        List<PersonaEntity> personasList = new ArrayList<PersonaEntity>();
-        result.forEach(personasList ::add);
-        return personasList;*/
-
-         //return personaRepository.buscaPorNombre(nombre);
-        return  personaRepository.findByPrimerNombreAndPrimerApellido("maria", "liberato");
-    }
-
-    @GetMapping("/countPersonas")
+    /**@GetMapping("/countPersonas")
     public String ContarPersonas()
     {
-        return "Total: " + personaRepository.count();
-    }
+    return "Total: " + personaRepository.count();
+    }*/
 
-    @GetMapping("/ePersonas")
-    public String ExistePersona(@RequestParam int id)
+    /**@GetMapping("/search")
+    public String search(@RequestParam long id){
+    String customer = "";
+    customer = personaRepository.findById((int) id).toString();
+    return customer;
+    }*/
+
+    /**@GetMapping("/searchPersonaId")
+    public PersonaEntity getPersonasId(@RequestParam int id){
+    return personaRepository.findById(id).get();
+    }*/
+
+   /** @GetMapping("/ePersonas/{id}")
+    public String ExistePersona(@PathVariable("id") int id)
     {
         if (personaRepository.existsById(id)==true)
         {
-            return "La persona si existe.";
+            return "La persona existe.";
         }
         else
         {
             return "La persona no existe.";
         }
-    }
+    }*/
 
+   /**@PostMapping("/deletePersona")
+   public void deletePersonas(@RequestBody PersonaEntity id)
+   {
+       personaRepository.delete(id);
+   }*/
 }

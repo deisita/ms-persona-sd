@@ -13,7 +13,7 @@ public interface PersonaRepository extends CrudRepository<PersonaEntity, Integer
    // List<PersonaEntity>buscaPorNombre(@Param("nombre") String primer_nombre);
 
 
-    List<PersonaEntity>findByPrimerNombreAndPrimerApellido(String primerNombre,String primerApellido);
+    PersonaEntity findByPrimerNombreAndPrimerApellido(String primerNombre,String primerApellido);
     /**
      * Esta funcion hace exactamente lo mismo que la funcion buscaPorNombre pero utilizando DSL (Domain Specificic Lenguage) de Spring
      * @param nombre Nombre de usuario a buscar (sin wildcards, ya lo pone JPL)

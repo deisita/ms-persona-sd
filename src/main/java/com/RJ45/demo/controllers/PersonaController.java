@@ -59,7 +59,7 @@ public class PersonaController{
         }
     }
 
-    @GetMapping("/{nombre},{apellido}")
+    @GetMapping("/{nombre}/{apellido}")
     public ResponseEntity<?> getPersonaNombreApellido(@PathVariable("nombre") String nombre,@PathVariable("apellido")  String apellido){
 
         PersonaEntity obj=null;
@@ -165,11 +165,40 @@ public class PersonaController{
         }
     }
 
-   /** @PostMapping("/agregarPersona")
-    public void agregarPersona(@RequestBody PersonaEntity nueva)
-    {
-        personaRepository.save(nueva);
-    }*/
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> updatePersonaId(@PathVariable("id") Integer id, @RequestBody PersonaEntity updatePersona) {
+        PersonaEntity obj=null;
+        Map<String, Object> response = new HashMap<>();
+        try{
+            obj = personaRepository.findById(id).orElse(null);
+            if (obj==null){
+                response.put("mensaje","No se pudo encontrar a la persona.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            obj = personaRepository.save(updatePersona);
+            if (obj==null){
+                response.put("mensaje","No se agregó la persona.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            response.put("mensaje","se actualizo la persona.");
+            response.put("mensaje2",obj);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            //return new ResponseEntity<>(obj, HttpStatus.OK);
+        }
+        catch(DataAccessException e){
+            response.put("mensaje","Error al realizar la consulta en la base de datos.");
+            response.put("Error",e.getMessage()+"##"+e.getMostSpecificCause().getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    /** @PostMapping("/agregarPersona")
+     public void agregarPersona(@RequestBody PersonaEntity nueva)
+     {
+         personaRepository.save(nueva);
+     }*/
 
     /**@GetMapping("/p")
     public List<PersonaEntity> getPersonasIdd(@RequestParam String nombre){

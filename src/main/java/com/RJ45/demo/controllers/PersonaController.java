@@ -171,20 +171,26 @@ public class PersonaController{
         PersonaEntity obj=null;
         Map<String, Object> response = new HashMap<>();
         try{
+
             obj = personaRepository.findById(id).orElse(null);
             if (obj==null){
-                response.put("mensaje","No se pudo encontrar a la persona.");
+                response.put("mensaje","No se encontro la persona.");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
-            obj = personaRepository.save(updatePersona);
-            if (obj==null){
-                response.put("mensaje","No se agregó la persona.");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-            }
+
+            PersonaEntity persona = personaRepository.findById(id).get();
+            persona.setPrimerNombre(updatePersona.getPrimerNombre());
+            persona.setSegundoNombre(updatePersona.getSegundoNombre());
+            persona.setPrimerApellido(updatePersona.getPrimerApellido());
+            persona.setSegundoApellido(updatePersona.getSegundoApellido());
+            persona.setFechaNacimiento(updatePersona.getFechaNacimiento());
+            persona.setGenero(updatePersona.getGenero());
+            personaRepository.save(persona);
+
             response.put("mensaje","se actualizo la persona.");
-            response.put("mensaje2",obj);
+            response.put("mensaje2",persona);
             return new ResponseEntity<>(response, HttpStatus.OK);
-            //return new ResponseEntity<>(obj, HttpStatus.OK);
+
         }
         catch(DataAccessException e){
             response.put("mensaje","Error al realizar la consulta en la base de datos.");
